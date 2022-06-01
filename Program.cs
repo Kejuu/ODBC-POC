@@ -2,36 +2,71 @@
 using System.Data.Odbc;
 Random rnd = new Random();
 OdbcConnection cnn = new OdbcConnection(@"Driver={Microsoft Access Driver (*.mdb, *.accdb)};Dbq=C:\Json\Students1.accdb;Uid=Admin;Pwd=;");
+var StudentGlobal = new Student();
 
-var studentToInsert = new Student
+while (true)
 {
-    Id = rnd.Next(999).ToString(),
-    Email = "test@test.test",
-    Name = "Nombre",
-    Last_Name = "Apellido",
-    Level = "test level"
-};
-CreateStudent(studentToInsert);
-Console.WriteLine("Get All");
-GetAllStudents();
-Console.WriteLine("Get By Id");
-GetStudentById(99);
-var studentToUpdate = new Student
-{
-    Id = "99",
-    Email = "test@test.test",
-    Name = "Nombre",
-    Last_Name = "Apellido",
-    Level = "test level"
-};
-UpdateStudentById(studentToUpdate);
-DeleteStudentById(76);
+    Console.WriteLine("1 for create student\n2 for get all students\n 3 for get student by id\n 4 for update student by id\n 5 for delete student by id");
+    var decision = Console.ReadLine();
+    if (String.IsNullOrEmpty(decision))
+        break;
+    if (decision == "1")
+    {
+        StudentGlobal.Id = rnd.Next(999).ToString();
+        Console.WriteLine("Insert name");
+        StudentGlobal.Name = Console.ReadLine();
+        Console.WriteLine("Insert last name");
+        StudentGlobal.Last_Name = Console.ReadLine();
+        Console.WriteLine("Insert level");
+        StudentGlobal.Level = Console.ReadLine();
+        Console.WriteLine("Insert email");
+        StudentGlobal.Email = Console.ReadLine();
+
+        CreateStudent(StudentGlobal);
+        StudentGlobal = new Student();
+        Console.WriteLine(String.Empty);
+    }
+    if (decision == "2")
+    {
+        Console.WriteLine("Get All");
+        GetAllStudents();
+        Console.WriteLine(String.Empty);
+    }
+    if (decision == "3")
+    {
+        Console.WriteLine("Get By Id");
+        GetStudentById(Int32.Parse(Console.ReadLine()));
+        Console.WriteLine(String.Empty);
+    }
+    if (decision == "4")
+    {
+        Console.WriteLine("Update by id");
+        StudentGlobal.Id = Console.ReadLine();
+        Console.WriteLine("Insert name");
+        StudentGlobal.Name = Console.ReadLine();
+        Console.WriteLine("Insert last name");
+        StudentGlobal.Last_Name = Console.ReadLine();
+        Console.WriteLine("Insert level");
+        StudentGlobal.Level = Console.ReadLine();
+        Console.WriteLine("Insert email");
+        StudentGlobal.Email = Console.ReadLine();
+        UpdateStudentById(StudentGlobal);
+        StudentGlobal = new Student();
+        Console.WriteLine(String.Empty);
+    }
+    if (decision == "5")
+    {
+        Console.WriteLine("Delete student by id");
+        DeleteStudentById(Int32.Parse(Console.ReadLine()));
+        Console.WriteLine(String.Empty);
+    }
+
+}
 
 void DeleteStudentById(int id)
 {
     using (OdbcCommand cmd = cnn.CreateCommand())
     {
-        List<Student> students = null;
         cnn.Open();
         cmd.CommandText = $"DELETE [Students.*] FROM Students WHERE Students.[Student ID] = '{id}'";
         cmd.ExecuteNonQuery();
